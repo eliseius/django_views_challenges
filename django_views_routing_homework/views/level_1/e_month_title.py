@@ -13,10 +13,16 @@ from django.http import HttpResponse, HttpResponseNotFound
 """
 
 
-def get_month_title_by_number(month_number: int):
-    pass  # код писать тут
+def get_month_title_by_number(month_number: int) -> str:
+    months = {1: 'January', 2: 'February', 3: 'March', 4: 'April', 5: 'May', 6: 'June',
+        7: 'July', 8: 'August', 9: 'September', 10: 'October', 11: 'November', 12: 'December'
+    }
+    name_month = months.get(month_number)
+    return name_month
 
 
 def get_month_title_view(request, month_number: int):
-    # код писать тут
+    name_month = get_month_title_by_number(month_number)
+    if name_month is not None:
+        return HttpResponse(name_month)
     return HttpResponseNotFound('Месяца с таким номером не существует')
