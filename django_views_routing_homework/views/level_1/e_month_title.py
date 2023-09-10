@@ -1,3 +1,5 @@
+import calendar
+
 from django.http import HttpResponse, HttpResponseNotFound
 
 
@@ -14,10 +16,11 @@ from django.http import HttpResponse, HttpResponseNotFound
 
 
 def get_month_title_by_number(month_number: int) -> str:
-    months = {1: 'January', 2: 'February', 3: 'March', 4: 'April', 5: 'May', 6: 'June',
-        7: 'July', 8: 'August', 9: 'September', 10: 'October', 11: 'November', 12: 'December'
-    }
-    name_month = months.get(month_number)
+    months = list(calendar.month_name)
+    if month_number in range(1, 13):
+        name_month = months[month_number]
+    else:
+        name_month = None
     return name_month
 
 
