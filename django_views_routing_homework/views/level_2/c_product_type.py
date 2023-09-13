@@ -37,7 +37,24 @@ PRODUCTS = [
 
 
 def get_products_view(request):
-    products = []
-    # код писать тут
+    path_row = request.get_full_path()
+    try:
+        path_list = path_row.split(sep='?')[1]
+        data = get_filter_or_all_type(path_list)
+    except IndexError:
+        data=PRODUCTS
+    
+    return JsonResponse(data=data, safe=False)
 
-    return JsonResponse(data=products, safe=False)
+
+def get_filter_or_all_type(path_list):
+    params = path_list.split(sep='=')
+    data = PRODUCTS
+    if 'type' in params:
+        type = params[1]
+        products = []
+        for element in PRODUCTS:
+            if element['type'] == type:
+                products.append(element)
+        data = products
+    return data
