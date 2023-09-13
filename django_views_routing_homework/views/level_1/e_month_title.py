@@ -16,11 +16,10 @@ from django.http import HttpResponse, HttpResponseNotFound
 
 
 def get_month_title_by_number(month_number: int) -> str:
-    months = list(calendar.month_name)
+    months = calendar.month_name
+    name_month = None
     if month_number in range(1, 13):
         name_month = months[month_number]
-    else:
-        name_month = None
     return name_month
 
 
