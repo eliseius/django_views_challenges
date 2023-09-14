@@ -1,4 +1,4 @@
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 
 
 """
@@ -37,24 +37,13 @@ PRODUCTS = [
 
 
 def get_products_view(request):
-    path_row = request.get_full_path()
-    try:
-        path_list = path_row.split(sep='?')[1]
-        data = get_filter_or_all_type(path_list)
-    except IndexError:
-        data=PRODUCTS
-    
-    return JsonResponse(data=data, safe=False)
-
-
-def get_filter_or_all_type(path_list):
-    params = path_list.split(sep='=')
+    products = []
+    params = request.GET
     data = PRODUCTS
-    if 'type' in params:
-        type = params[1]
-        products = []
-        for element in PRODUCTS:
-            if element['type'] == type:
-                products.append(element)
+    if 'type' in params.keys():
+        for product in PRODUCTS:
+            if params['type'] == product['type']:
+                products.append(product)
         data = products
-    return data
+
+    return JsonResponse(data=data, safe=False)
