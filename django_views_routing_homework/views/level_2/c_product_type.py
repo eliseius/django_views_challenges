@@ -37,13 +37,9 @@ PRODUCTS = [
 
 
 def get_products_view(request):
-    products = []
     params = request.GET
-    data = PRODUCTS
+    products_send = PRODUCTS
     if 'type' in params.keys():
-        for product in PRODUCTS:
-            if params['type'] == product['type']:
-                products.append(product)
-        data = products
+        products_send = [product for product in PRODUCTS if params['type'] == product['type']]
 
-    return JsonResponse(data=data, safe=False)
+    return JsonResponse(data=products_send, safe=False)
