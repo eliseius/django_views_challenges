@@ -18,8 +18,34 @@
 Когда будете писать код, не забывайте о читаемости, поддерживаемости и модульности.
 """
 
-from django.http import HttpResponse, HttpRequest
+import json
+
+from django.http import JsonResponse, HttpResponse, HttpRequest
+
+from django_views_routing_homework.models import User
 
 
 def validate_user_data_view(request: HttpRequest) -> HttpResponse:
-    pass  # код писать тут
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+        except:
+            return HttpResponse('bad request')
+    else:
+        return HttpResponse()
+    
+    response = check_conditions(data)
+    return JsonResponse(data={'is_valid': response}, status=200)
+
+
+def check_conditions(data):
+    check = User.objects.create(
+        full_name=data['full_name'],
+        email=data['email'],
+        registered_from=data['registered_from'],
+        age=data['age']
+    )
+    if check:
+        return True
+    else:
+        return False

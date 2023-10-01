@@ -18,4 +18,22 @@ from django.http import HttpResponse, HttpRequest
 
 
 def generate_file_with_text_view(request: HttpRequest) -> HttpResponse:
-    pass  # код писать тут
+    data = request.GET
+    try:
+        length = data['length']
+    except KeyError:
+        return HttpResponse(status=403)
+    
+    if int(length) > 10000:
+        return HttpResponse(status=403)
+    
+    text = 'word ' + length
+
+    response = HttpResponse(
+        content_type="text/csv",
+        headers={"Content-Disposition": 'attachment; filename="exsample.txt"'},
+    )
+
+    response.write(text)
+
+    return response
