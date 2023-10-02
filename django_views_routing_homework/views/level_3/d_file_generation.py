@@ -15,19 +15,20 @@
 """
 
 from django.http import HttpResponse, HttpRequest
+from pathlib import Path
+
+import random
+import pathlib
 
 
 def generate_file_with_text_view(request: HttpRequest) -> HttpResponse:
     data = request.GET
-    try:
-        length = data['length']
-    except KeyError:
+    length = data.get('length')
+    
+    if length is None or int(length) > 10000:
         return HttpResponse(status=403)
     
-    if int(length) > 10000:
-        return HttpResponse(status=403)
-    
-    text = 'word ' + length
+    text = get_text(int(length))
 
     response = HttpResponse(
         content_type="text/csv",
@@ -35,5 +36,48 @@ def generate_file_with_text_view(request: HttpRequest) -> HttpResponse:
     )
 
     response.write(text)
-
     return response
+
+
+def get_list_words(name_file: str) -> list[str]:
+    with open(name_file, encoding='utf-8') as file:
+        text = file.read()
+    return text.split()
+
+
+def make_pairs(data: list[str]) -> tuple:
+    for item in range(len(data)-1):
+        yield (data[item], data[item+1])
+
+
+def make_words_dict(data: list[str]) -> dict[str, list[str]]:
+    words_dict = {}
+
+    for word_1, word_2 in make_pairs(data):
+        if word_1 in words_dict.keys():
+            words_dict[word_1].append(word_2)
+        else:
+            words_dict[word_1] = [word_2]
+    return words_dict
+
+
+def get_first_word(words_list: list[str]) -> str:
+    word = random.choice(words_list)
+    while word.islower():
+        word = random.choice(words_list)
+    return word
+
+
+def get_text(numb: int) -> str:
+    path = Path(pathlib.Path.home(), 'Загрузки', 'che.txt')
+    words_list = get_list_words(path)
+    words_dict = make_words_dict(words_list)
+    first_word = get_first_word(words_list)
+    chain = [first_word]
+
+    for _ in range(numb-1):
+        last_word_chain = chain[-1]
+        words_for_choice = words_dict[last_word_chain]
+        chain.append(random.choice(words_for_choice))
+
+    return ' '.join(chain)
