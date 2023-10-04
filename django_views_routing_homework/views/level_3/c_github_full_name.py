@@ -13,12 +13,14 @@ from django.http import JsonResponse, HttpResponse, HttpRequest
 import requests
 import json
 
+from constant import TOKEN
+
 
 def fetch_name_from_github_view(request: HttpRequest, github_username: str) -> HttpResponse:
     headers = {
         'Accept': 'application/vnd.github+json',
-        'Authorization': 'Bearer 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',
-        'X-GitHub-Api-Version': '2022-11-28'
+        'Authorization': f'Bearer {TOKEN}',
+        'X-GitHub-Api-Version': '2022-11-28',
     }
     url = f'https://api.github.com/users/{github_username}'
 

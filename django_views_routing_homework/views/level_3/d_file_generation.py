@@ -22,8 +22,7 @@ import pathlib
 
 
 def generate_file_with_text_view(request: HttpRequest) -> HttpResponse:
-    data = request.GET
-    length = data.get('length')
+    length = request.GET.get('length')
     
     if length is None or int(length) > 10000:
         return HttpResponse(status=403)
