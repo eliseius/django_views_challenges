@@ -31,7 +31,7 @@ def generate_file_with_text_view(request: HttpRequest) -> HttpResponse:
 
     response = HttpResponse(
         content_type="text/csv",
-        headers={"Content-Disposition": 'attachment; filename="exsample.txt"'},
+        headers={"Content-Disposition": 'attachment; filename="generated_text.txt"'},
     )
 
     response.write(text)
