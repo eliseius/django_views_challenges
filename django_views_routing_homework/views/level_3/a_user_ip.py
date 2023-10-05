@@ -9,4 +9,6 @@ from django.http import HttpResponse, HttpRequest
 
 
 def show_user_ip_view(request: HttpRequest) -> HttpResponse:
-    pass  # код писать тут
+    ip_address = request.META['REMOTE_ADDR']
+    return HttpResponse(ip_address)
+
