@@ -34,8 +34,4 @@ def validate_user_data_view(request: HttpRequest) -> HttpResponse:
         return HttpResponse()
 
     response = UserForm(data)
-    if response.is_valid():
-        result = True
-    else:
-        result = False
-    return JsonResponse(data={'is_valid': result}, status=200)
+    return JsonResponse(data={'is_valid': response.is_valid()}, status=200)
